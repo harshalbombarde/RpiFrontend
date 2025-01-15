@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const DeviceForm = () => {
@@ -69,19 +70,31 @@ const DeviceForm = () => {
     });
   };
 
-  const addDevice = () => {
-    setDevices([...devices, newDevice]);
-    setNewDevice({
-      device_type: "",
-      tech_details: {},
-      comm_type: "",
-      comm_details: {},
-    });
+  const addDevice = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/save-device",
+        newDevice
+      );
+
+      console.log("Device added:", response.data);
+
+      setDevices((prevDevices) => [...prevDevices, newDevice]);
+
+      setNewDevice({
+        device_type: "",
+        tech_details: {},
+        comm_type: "",
+        comm_details: {},
+      });
+    } catch (error) {
+      console.error("Error adding device:", error);
+    }
   };
 
   return (
     <div className="flex flex-col items-center p-4 bg-gray-100 min-h-screen">
-      <div className="bg-white rounded-lg shadow-lg p-6 max-w-3xl w-full">
+      <div className="bg-white rounded-lg shadow-lg p-6 max-w-3xl w-full my-20">
         <h1 className="text-xl font-bold mb-4 text-center">
           Device Configuration Form
         </h1>
