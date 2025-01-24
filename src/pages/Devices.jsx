@@ -25,6 +25,7 @@ const DeviceForm = () => {
       "Battery storage capacity (kWh)",
       "Make and model",
       "Serial number",
+      "Number of phases",
     ],
     "DG set": ["Power limit (kW)", "Make and model", "Serial number"],
     Meters: [
