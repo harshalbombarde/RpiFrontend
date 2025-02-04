@@ -14,8 +14,9 @@ const DeviceForm = () => {
   });
 
   const deviceTechDetails = {
-    "Solar inverter": [
-      "Make and model",
+    Inverter: [
+      "Brand",
+      "Model number",
       "Serial number",
       "kWp (capacity)",
       "Number of phases",
@@ -23,15 +24,18 @@ const DeviceForm = () => {
     Battery: [
       "Battery power capacity (kW)",
       "Battery storage capacity (kWh)",
-      "Make and model",
+      "Brand",
+      "Model number",
       "Serial number",
       "Number of phases",
     ],
-    "DG set": ["Power limit (kW)", "Make and model", "Serial number"],
+    "DG set": ["Power limit (kW)", "Brand", "Model number", "Serial number"],
     Meters: [
       "Number of phases",
-      "Make and model",
+      "Brand",
+      "Model number",
       "Serial number",
+      "Connected to",
       {
         "Data to collect": [
           "L-L voltage",
@@ -47,6 +51,13 @@ const DeviceForm = () => {
       },
     ],
   };
+
+  const connectedToOptions = [
+    "Grid",
+    "DG Set",
+    "Total consumption",
+    "Total generation",
+  ];
 
   const commTypes = {
     "Modbus TCP": ["IP", "Port", "Parity", "Stop bits"],
@@ -77,8 +88,6 @@ const DeviceForm = () => {
         "http://localhost:8000/save-device",
         newDevice
       );
-
-      console.log("Device added:", response.data);
 
       setDevices((prevDevices) => [...prevDevices, newDevice]);
 
@@ -122,14 +131,31 @@ const DeviceForm = () => {
               typeof field === "string" ? (
                 <div key={field} className="mb-4">
                   <label className="block font-bold mb-2">{field}</label>
-                  <input
-                    type="text"
-                    className="w-full border rounded-lg p-2"
-                    value={newDevice.tech_details[field] || ""}
-                    onChange={(e) =>
-                      handleTechDetailsChange(field, e.target.value)
-                    }
-                  />
+                  {field === "Connected to" ? (
+                    <select
+                      className="w-full border rounded-lg p-2"
+                      value={newDevice.tech_details[field] || ""}
+                      onChange={(e) =>
+                        handleTechDetailsChange(field, e.target.value)
+                      }
+                    >
+                      <option value="">Select Connection</option>
+                      {connectedToOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      className="w-full border rounded-lg p-2"
+                      value={newDevice.tech_details[field] || ""}
+                      onChange={(e) =>
+                        handleTechDetailsChange(field, e.target.value)
+                      }
+                    />
+                  )}
                 </div>
               ) : (
                 <div key="checkboxes" className="mb-4">
